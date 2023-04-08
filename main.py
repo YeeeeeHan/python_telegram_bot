@@ -2,6 +2,7 @@ import logging
 import os
 from pprint import pprint
 
+import requests
 import telebot
 from dotenv import load_dotenv
 
@@ -87,7 +88,8 @@ def pretty_print_telebot_callback_query(call: telebot.types.CallbackQuery):
 def handle_hello(message):
     print(
         f"Received message from user {message.from_user.username} ({message.from_user.id}): {message.text}")
-    bot.send_message(message.chat.id, "Howdy, how are you doing")
+    bot.send_message(
+        message.chat.id, f"Howdy, how are you doing, message_id:{message.message_id}")
 
 
 # Handle /reply command
@@ -96,6 +98,25 @@ def handle_start(message):
     print(
         f"Received message from user {message.from_user.username} ({message.from_user.id}): {message.text}")
     bot.reply_to(message, "Replying to your message")
+
+
+# Handle /delete command
+@bot.message_handler(commands=['delete'])
+def handle_delete(message):
+    print(
+        f"Received message from user {message.from_user.username} ({message.from_user.id}): {message.text}")
+    bot.reply_to(message, "Deleting message...")
+    bot.delete_message(message.chat.id, message.message_id)
+
+
+# Handle /delete command
+@bot.message_handler(commands=['edit'])
+def handle_edit(message):
+    print(
+        f"Received message from user {message.from_user.username} ({message.from_user.id}): {message.text}")
+    print(f"Is replying to: {message.reply_to_message.message_id}")
+    bot.edit_message_text("edited", message.chat.id,
+                          message.reply_to_message.message_id)
 
 
 # Handle voice messages
