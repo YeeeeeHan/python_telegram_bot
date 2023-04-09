@@ -127,6 +127,15 @@ def handle_voice_message(message):
     bot.send_message(message.chat.id, "Lovely voice message!")
 
 
+# Handle photo messages
+@bot.message_handler(content_types=['photo'])
+def handle_photo(message):
+    print(message)
+    print(
+        f"Received message from user {message.from_user.username} ({message.from_user.id}): {message.text}")
+    bot.send_message(message.chat.id, "Lovely photo!")
+
+
 # Handle location messages
 @bot.message_handler(content_types=['location'])
 def handle_location(message):
@@ -240,6 +249,13 @@ def send_keyboard(message):
     markup.add(location_button, contact_button)
     markup.add(text_button)
     bot.send_message(chat_id, text, reply_markup=markup)
+
+
+# Handle forwarded messages
+@bot.message_handler(func=lambda message: message.forward_from is not None)
+def handle_forwarded_message(message):
+    print("This message was forwarded")
+    bot.send_message(message.chat.id, "You've forwarded a message.")
 
 
 # Handle all uncaught messages

@@ -19,6 +19,7 @@ logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
 
+# Why is this function necessary?
 def send_long_message(bot, chat_id, text, max_length=4096):
     if len(text) <= max_length:
         bot.send_message(chat_id, text)
@@ -45,8 +46,10 @@ def send_long_message(bot, chat_id, text, max_length=4096):
 # Handle voice messages
 @bot.message_handler(content_types=['voice'])
 def handle_voice_message(message):
+    # Where is the best place to put this?
     bot.send_message(message.chat.id, "Transcribing...")
 
+    # How do we know there's such a function?
     file_info = bot.get_file_url(message.voice.file_id)
 
     endpoint = "https://api.assemblyai.com/v2/transcript"
@@ -58,14 +61,13 @@ def handle_voice_message(message):
     }
     response = requests.post(endpoint, json=json, headers=headers)
 
-    # print("@@@@@@@@@@@@@@", response.json())
-
     status = ""
     text = ""
     endpoint = f"https://api.assemblyai.com/v2/transcript/{response.json()['id']}"
     headers = {
         "authorization": "f0d2f3df22fc499e90085f96f902b3cd",
     }
+    # Polling vs Push
     while status != "completed":
         response = requests.get(endpoint, headers=headers)
         status = response.json()['status']
