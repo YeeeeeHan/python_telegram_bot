@@ -20,9 +20,10 @@ bot = telebot.TeleBot(BOT_TOKEN)
 logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
+chat_id = -4186339791
 
-def fetch_and_send_api_data():
-    chat_id = -4186339791
+
+def price_alert():
     # Replace with your API endpoint
     url_YTrseth = 'https://api-v2.pendle.finance/core/v1/1/markets/0x4f43c77872db6ba177c270986cd30c3381af37ee'
     url_YTeeth = 'https://api-v2.pendle.finance/core/v1/1/markets/0xf32e58f92e60f4b0a37a69b95d642a471365eae8'
@@ -54,21 +55,37 @@ def fetch_and_send_api_data():
 
 # Handle /check command
 @bot.message_handler(commands=['check'])
-def handle_check(message):
-    fetch_and_send_api_data()
+def price_check(message):
+    url_YTrseth = 'https://api-v2.pendle.finance/core/v1/1/markets/0x4f43c77872db6ba177c270986cd30c3381af37ee'
+    url_YTeeth = 'https://api-v2.pendle.finance/core/v1/1/markets/0xf32e58f92e60f4b0a37a69b95d642a471365eae8'
+
+    response_YTrseth = requests.get(url_YTrseth)
+    response_YTrseth.raise_for_status()
+    data_YTrseth = response_YTrseth.json()
+
+    response_YTeeth = requests.get(url_YTeeth)
+    response_YTeeth.raise_for_status()
+    data_YTeeth = response_YTeeth.json()
+
+    bot.send_message(
+        chat_id,
+        f"**{data_YTeeth['yt']['proName']}**\n" +
+        f"APY: {round(data_YTeeth['impliedApy']* 100, 3)}%\n" +
+        f"\n**{data_YTrseth['yt']['proName']}**\n" +
+        f"APY: {round(data_YTrseth['impliedApy']* 100, 3)}%\n",
+        parse_mode='Markdown')
 
 
 # Handle all uncaught messages
 @bot.message_handler(func=lambda m: True)
 def handle_all_messages(message):
-    # pretty_print_telebot_message(message)
     print(
         f"[ChatID: {message.chat.id}]Received message from user {message.from_user.username} ({message.from_user.id}): {message.text}")
 
 
 # Schedule the message
-fetch_and_send_api_data()
-schedule.every().hour.do(fetch_and_send_api_data)
+price_alert()
+schedule.every().hour.do(price_alert)
 
 
 # Create a separate thread for the schedule loop
