@@ -21,14 +21,6 @@ logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
 
-# Handle all uncaught messages
-@bot.message_handler(func=lambda m: True)
-def handle_all_messages(message):
-    # pretty_print_telebot_message(message)
-    print(
-        f"[ChatID: {message.chat.id}]Received message from user {message.from_user.username} ({message.from_user.id}): {message.text}")
-
-
 def fetch_and_send_api_data():
     chat_id = -4186339791
     # Replace with your API endpoint
@@ -64,6 +56,14 @@ def fetch_and_send_api_data():
 @bot.message_handler(commands=['check'])
 def handle_check(message):
     fetch_and_send_api_data()
+
+
+# Handle all uncaught messages
+@bot.message_handler(func=lambda m: True)
+def handle_all_messages(message):
+    # pretty_print_telebot_message(message)
+    print(
+        f"[ChatID: {message.chat.id}]Received message from user {message.from_user.username} ({message.from_user.id}): {message.text}")
 
 
 # Schedule the message
