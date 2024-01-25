@@ -283,13 +283,19 @@ def fetch_and_send_api_data():
         response_YTeeth.raise_for_status()
         data_YTeeth = response_YTeeth.json()
 
-        bot.send_message(
-            chat_id,
-            f"**{data_YTeeth['yt']['proName']}**\n" +
-            f"APY: {round(data_YTeeth['impliedApy']* 100, 3)}%\n" +
-            f"\n**{data_YTrseth['yt']['proName']}**\n" +
-            f"APY: {round(data_YTrseth['impliedApy']* 100, 3)}%\n",
-            parse_mode='Markdown')
+        if data_YTeeth['impliedApy'] < 0.285:
+            bot.send_message(
+                chat_id,
+                f"**{data_YTeeth['yt']['proName']}**\n" +
+                f"APY: {round(data_YTeeth['impliedApy']* 100, 3)}%\n",
+                parse_mode='Markdown')
+        if data_YTrseth['impliedApy'] < 0.285:
+            bot.send_message(
+                chat_id,
+                f"**{data_YTrseth['yt']['proName']}**\n" +
+                f"APY: {round(data_YTrseth['impliedApy']* 100, 3)}%\n",
+                parse_mode='Markdown')
+
     except requests.RequestException as e:
         print(f"Error fetching data from API: {e}")
 
