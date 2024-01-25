@@ -254,7 +254,7 @@ def send_keyboard(message):
 # Handle forwarded messages
 @bot.message_handler(func=lambda message: message.forward_from is not None)
 def handle_forwarded_message(message):
-    print("This message was forwarded")
+    print("This message was forwarded.")
     bot.send_message(message.chat.id, "You've forwarded a message.")
 
 
