@@ -1,7 +1,4 @@
 pyTelegramBotAPI
 python-dotenv
 requests
-openai
-threading
-time
 schedule
