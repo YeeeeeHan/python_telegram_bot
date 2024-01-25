@@ -60,6 +60,12 @@ def fetch_and_send_api_data():
         print(f"Error fetching data from API: {e}")
 
 
+# Handle /check command
+@bot.message_handler(commands=['check'])
+def handle_check(message):
+    fetch_and_send_api_data()
+
+
 # Schedule the message
 fetch_and_send_api_data()
 schedule.every().hour.do(fetch_and_send_api_data)
