@@ -122,14 +122,14 @@ def price_alert():
     if yt_eeth_apy < 0.285:
         bot.send_message(
             chat_id,
-            f"*YT eETH*\n" +
+            f"*_YT eETH_*\n" +
             f"APY: {yt_eeth_apy}%\n",
             "SELL SELL SELL",
             parse_mode='MarkdownV2')
     if yt_rseth_apy < 0.285:
         bot.send_message(
             chat_id,
-            f"*YT eETH*\n" +
+            f"*_YT eETH_*\n" +
             f"APY: {yt_rseth_apy}%\n" +
             "SELL SELL SELL",
             parse_mode='MarkdownV2')
