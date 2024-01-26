@@ -27,10 +27,10 @@ last_check = {
     "yt_rseth_apy": 0
 }
 
-PROFILE_MESSAGE = """**YT eETH**
+PROFILE_MESSAGE = """*YT eETH*
 APY: {apy_eeth}% \({diff_apy_eeth}% {up_or_down_eeth}\)
 
-**YT rsETH**
+*YT rsETH*
 APY: {apy_rseth}% \({diff_apy_rseth}% {up_or_down_rseth}\)
 """
 
@@ -122,14 +122,14 @@ def price_alert():
     if yt_eeth_apy < 0.285:
         bot.send_message(
             chat_id,
-            f"**YT eETH**\n" +
+            f"*YT eETH*\n" +
             f"APY: {yt_eeth_apy}%\n",
             "SELL SELL SELL",
             parse_mode='MarkdownV2')
     if yt_rseth_apy < 0.285:
         bot.send_message(
             chat_id,
-            f"**YT eETH**\n" +
+            f"*YT eETH*\n" +
             f"APY: {yt_rseth_apy}%\n" +
             "SELL SELL SELL",
             parse_mode='MarkdownV2')
