@@ -22,10 +22,6 @@ telebot.logger.setLevel(logging.INFO)
 
 chat_id = -4186339791
 
-
-def price_alert():
-    # Replace with your API endpoint
-
 last_check = {
     "yt_eeth_apy": 0,
     "yt_rseth_apy": 0
