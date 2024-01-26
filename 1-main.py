@@ -25,55 +25,103 @@ chat_id = -4186339791
 
 def price_alert():
     # Replace with your API endpoint
+
+last_check = {
+    "yt_eeth_apy": 0,
+    "yt_rseth_apy": 0
+}
+
+PROFILE_MESSAGE = """**YT eETH**
+APY: {apy_eeth}% \({diff_apy_eeth}% {up_or_down_eeth}\)
+
+**YT rsETH**
+APY: {apy_rseth}% \({diff_apy_rseth}% {up_or_down_rseth}\)
+"""
+
+
+# Find and replace all '.' with '\.'
+def formatDecimals(number):
+    return str(number).replace('.', '\.')
+
+def formatMessage(yt_eeth_apy, yt_rseth_apy):
+    return PROFILE_MESSAGE.format(
+        apy_eeth=formatDecimals(yt_eeth_apy),
+        diff_apy_eeth=formatDecimals(calculateDifference(yt_eeth_apy, last_check["yt_eeth_apy"])),
+        up_or_down_eeth=render_up_or_down(calculateDifference(yt_eeth_apy, last_check["yt_eeth_apy"])),
+        apy_rseth=formatDecimals(yt_rseth_apy),
+        diff_apy_rseth=formatDecimals(calculateDifference(yt_rseth_apy, last_check["yt_rseth_apy"])),
+        up_or_down_rseth=render_up_or_down(calculateDifference(yt_rseth_apy, last_check["yt_rseth_apy"]))
+
+    )
+
+def calculateDifference(new_apy, old_apy):
+    difference = new_apy - old_apy
+    return round(difference,3)
+
+def render_up_or_down(value):
+    if value > 0:
+        return "📈"
+    elif value < 0:
+        return "📉"
+    else:
+        return "🔷"
+
+def get_data():
+     # Replace with your API endpoint
     url_YTrseth = 'https://api-v2.pendle.finance/core/v1/1/markets/0x4f43c77872db6ba177c270986cd30c3381af37ee'
     url_YTeeth = 'https://api-v2.pendle.finance/core/v1/1/markets/0xf32e58f92e60f4b0a37a69b95d642a471365eae8'
     try:
+        # get YT rsEth APY
         response_YTrseth = requests.get(url_YTrseth)
         response_YTrseth.raise_for_status()
         data_YTrseth = response_YTrseth.json()
+        yt_rseth_apy = round(data_YTrseth['impliedApy']* 100, 3)
 
+        # get YT eETH APY
         response_YTeeth = requests.get(url_YTeeth)
         response_YTeeth.raise_for_status()
         data_YTeeth = response_YTeeth.json()
+        yt_eeth_apy = round(data_YTeeth['impliedApy']* 100, 3)
 
-        if data_YTeeth['impliedApy'] < 0.285:
-            bot.send_message(
-                chat_id,
-                f"**{data_YTeeth['yt']['proName']}**\n" +
-                f"APY: {round(data_YTeeth['impliedApy']* 100, 3)}%\n",
-                parse_mode='Markdown')
-        if data_YTrseth['impliedApy'] < 0.285:
-            bot.send_message(
-                chat_id,
-                f"**{data_YTrseth['yt']['proName']}**\n" +
-                f"APY: {round(data_YTrseth['impliedApy']* 100, 3)}%\n",
-                parse_mode='Markdown')
-
+        return yt_eeth_apy, yt_rseth_apy
     except requests.RequestException as e:
         print(f"Error fetching data from API: {e}")
+
+def price_alert():
+    yt_eeth_apy, yt_rseth_apy = get_data()   
+
+    if yt_eeth_apy < 0.285:
+        bot.send_message(
+            chat_id,
+            f"**YT eETH**\n" +
+            f"APY: {yt_eeth_apy}%\n",
+            "SELL SELL SELL",
+            parse_mode='MarkdownV2')
+    if yt_rseth_apy < 0.285:
+        bot.send_message(
+            chat_id,
+            f"**YT eETH**\n" +
+            f"APY: {yt_rseth_apy}%\n" +
+            "SELL SELL SELL",
+            parse_mode='MarkdownV2')
+
+
 
 
 # Handle /check command
 @bot.message_handler(commands=['check'])
 def price_check(message):
-    url_YTrseth = 'https://api-v2.pendle.finance/core/v1/1/markets/0x4f43c77872db6ba177c270986cd30c3381af37ee'
-    url_YTeeth = 'https://api-v2.pendle.finance/core/v1/1/markets/0xf32e58f92e60f4b0a37a69b95d642a471365eae8'
+    data_YTeeth, data_YTrseth = get_data()
 
-    response_YTrseth = requests.get(url_YTrseth)
-    response_YTrseth.raise_for_status()
-    data_YTrseth = response_YTrseth.json()
-
-    response_YTeeth = requests.get(url_YTeeth)
-    response_YTeeth.raise_for_status()
-    data_YTeeth = response_YTeeth.json()
+    message = formatMessage(data_YTeeth, data_YTrseth)
+    last_check["yt_eeth_apy"] = data_YTeeth
+    last_check["yt_rseth_apy"] = data_YTrseth
+    print(message)
 
     bot.send_message(
         chat_id,
-        f"**{data_YTeeth['yt']['proName']}**\n" +
-        f"APY: {round(data_YTeeth['impliedApy']* 100, 3)}%\n" +
-        f"\n**{data_YTrseth['yt']['proName']}**\n" +
-        f"APY: {round(data_YTrseth['impliedApy']* 100, 3)}%\n",
-        parse_mode='Markdown')
+        message,
+        parse_mode='MarkdownV2')
 
 
 # Handle all uncaught messages
@@ -85,7 +133,7 @@ def handle_all_messages(message):
 
 # Schedule the message
 price_alert()
-schedule.every().hour.do(price_alert)
+schedule.every().minute.do(price_alert)
 
 
 # Create a separate thread for the schedule loop
