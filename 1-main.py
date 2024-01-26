@@ -37,7 +37,7 @@ APY: {apy_rseth}% \({diff_apy_rseth}% {up_or_down_rseth}\)
 
 # Find and replace all '.' with '\.'
 def formatDecimals(number):
-    return str(number).replace('.', '\.')
+    return str(number).replace('.', '\.').replace('-', '\-')
 
 def formatMessage(yt_eeth_apy, yt_rseth_apy):
     return PROFILE_MESSAGE.format(
