@@ -27,10 +27,10 @@ last_check = {
     "yt_rseth_apy": 0
 }
 
-PROFILE_MESSAGE = """*YT eETH*
+PROFILE_MESSAGE = """*_YT eETH_*
 APY: {apy_eeth}% \({diff_apy_eeth}% {up_or_down_eeth}\)
 
-*YT rsETH*
+*_YT rsETH_*
 APY: {apy_rseth}% \({diff_apy_rseth}% {up_or_down_rseth}\)
 """
 
