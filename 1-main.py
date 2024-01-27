@@ -20,7 +20,8 @@ bot = telebot.TeleBot(BOT_TOKEN)
 logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
-chat_id = -4186339791
+# chat_id = -4186339791
+chat_id = 5613913769
 
 last_check = {
     "yt_eeth_apy": 0,
@@ -84,21 +85,24 @@ def get_data():
         print(f"Error fetching data from API: {e}")
 
 def price_alert():
-    yt_eeth_apy, yt_rseth_apy = get_data()   
+    data_YTeeth, data_YTrseth = get_data()
 
-    if yt_eeth_apy < 0.285:
+    message = formatMessage(data_YTeeth, data_YTrseth)
+    bot.send_message(
+        chat_id,
+        message,
+        parse_mode='MarkdownV2')
+
+    if data_YTeeth < 0.285:
         bot.send_message(
             chat_id,
-            f"**YT eETH**\n" +
-            f"APY: {yt_eeth_apy}%\n",
-            "SELL SELL SELL",
+            "YT eETH IS LESS THAN 0.285% APY. WE GOT FUCKED BY HEEHAWN. SELL SELL SELL.",
             parse_mode='MarkdownV2')
-    if yt_rseth_apy < 0.285:
+
+    if data_YTrseth < 0.285:
         bot.send_message(
             chat_id,
-            f"**YT eETH**\n" +
-            f"APY: {yt_rseth_apy}%\n" +
-            "SELL SELL SELL",
+            "YT rsETH IS LESS THAN 0.285% APY. WE GOT FUCKED BY HEEHAWN. SELL SELL SELL.",
             parse_mode='MarkdownV2')
 
 
