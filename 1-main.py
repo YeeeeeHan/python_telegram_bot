@@ -119,23 +119,30 @@ def get_data():
 def price_alert():
     data_YTeeth, data_YTrseth = get_data()
 
+
     message = formatMessage(data_YTeeth, data_YTrseth)
     bot.send_message(
         chat_id,
-        message,
+        "Yeeeee Haaawwwnn",
         parse_mode='MarkdownV2')
-
-    if data_YTeeth < 0.285:
+    
+    if data_YTeeth < 0.285 or data_YTrseth < 0.285:
         bot.send_message(
             chat_id,
-            "YT eETH IS LESS THAN 0.285% APY. WE GOT FUCKED BY HEEHAWN. SELL SELL SELL.",
+            message,
             parse_mode='MarkdownV2')
 
-    if data_YTrseth < 0.285:
-        bot.send_message(
-            chat_id,
-            "YT rsETH IS LESS THAN 0.285% APY. WE GOT FUCKED BY HEEHAWN. SELL SELL SELL.",
-            parse_mode='MarkdownV2')
+        if data_YTeeth < 0.285:
+            bot.send_message(
+                chat_id,
+                "YT eETH IS LESS THAN 0.285% APY. WE GOT FUCKED BY HEEHAWN. SELL SELL SELL.",
+                parse_mode='MarkdownV2')
+
+        if data_YTrseth < 0.285:
+            bot.send_message(
+                chat_id,
+                "YT rsETH IS LESS THAN 0.285% APY. WE GOT FUCKED BY HEEHAWN. SELL SELL SELL.",
+                parse_mode='MarkdownV2')
 
 
 # Handle /check command
