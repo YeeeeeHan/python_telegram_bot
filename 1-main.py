@@ -121,10 +121,10 @@ def price_alert():
 
 
     message = formatMessage(data_YTeeth, data_YTrseth)
-    bot.send_message(
-        chat_id,
-        "Yeeeee Haaawwwnn",
-        parse_mode='MarkdownV2')
+    # bot.send_message(
+    #     chat_id,
+    #     "Yeeeee Haaawwwnn",
+    #     parse_mode='MarkdownV2')
     
     if data_YTeeth < 0.285 or data_YTrseth < 0.285:
         bot.send_message(
